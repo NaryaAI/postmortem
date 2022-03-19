@@ -1,0 +1,50 @@
+const ethers = hre.ethers;
+const txHash = "0xe374495036fac18aa5b1a497a17e70f256c4d3d416dd1408c026f3f5c70a3a9c";
+
+/* 
+Victims:
+0x6F45De9817878B302186F56B38c4c1F2533B660F
+0xe9af2E97D387F4C20B71492E774ACe535B36949a
+0x396BFf8a62a4C8B3cf4C385D45e77795D9ED6B42
+0xB1fe6937a51870ea66B863BE76d668Fc98694f25
+0x1615E54bC83b3Bf0c26829b9B1f5F8168FDF98D7
+0x35C0578375D034B10Dc73d8Bb4D26F8c1bfF0001
+0xC2E21fb6112C295ef69F23D6D595868CCF9a5c3c
+0x2e75332E7eb55056017dBCDeE206601Cab372eEC
+0xCbD6b0DeE49EeA88a3343Ff4E5a2423586B4C1D6
+0xb0FabE3bCAC50F065DBF68C0B271118DDC005402
+0xf99C8873B972b4192e789F55AB954188D0d9A133
+0x57074E71b6BfA7d1810C47cf4FbE6A89A4E4b765
+0x5A4DDb0856fEE6b33f11CC264F369E77b0F0339C
+0x2637652AC58aDDfb67b401a1beFb5f48b967574D
+0x951b928F2a8ba7CE14Cc418cfEBfeE30A57294c3
+0x549d2d44a12B121A8b3667463448605B1F2D52A5
+0xEB74C6E3c046E16190DfeFB7d3CBA84Db5790CC4
+0x468c2EDe01B07c19d90f6C9b67617d1d7e6e2200
+0xEC36f0475B588A7f5C01D17c49C855f1ea6a0AAF
+0x19246d4cB92671D0F2166D00C9de687Ead3206F8
+0xcff8097B146Dc56f40bDf34e18e0283dd404765F
+0x1D58E9c7B65b4F07afB58c72D49979D2F2c7A3F7
+0x4Fa6B043DC07ac6081F0fFD1D62E937f5E4D63cF
+*/
+
+async function main() {
+    const DeiLenderSolidex = await ethers.getContractFactory("DeiLenderSolidex");
+    const tx = await ethers.provider.getTransactionReceipt(txHash);
+    const logs = tx.logs;
+    for (const rawLog of logs) {
+        try {
+            const log = DeiLenderSolidex.interface.parseLog(rawLog);
+            if (log.name === 'RemoveCollateral') {
+                console.log(log.args.from);
+            }
+        } catch (e) { }
+    }
+}
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
